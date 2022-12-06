@@ -6,7 +6,7 @@ name: FastPitch
 
 train_dataset: ???
 validation_datasets: ???
-sup_data_path: ???
+sup_data_path: "./fastpitch_sup_data"
 sup_data_types: [ "align_prior_matrix", "pitch" ]
 
 # Default values from librosa.pyin
@@ -28,9 +28,9 @@ lowfreq: 0
 highfreq: 8000
 window: hann
 
-phoneme_dict_path: "scripts/tts_dataset_files/cmudict-0.7b_nv22.10"
-heteronyms_path: "scripts/tts_dataset_files/heteronyms-052722"
-whitelist_path: "nemo_text_processing/text_normalization/en/data/whitelist/lj_speech.tsv"
+phoneme_dict_path: "tts_dataset_files/cmudict-0.7b_nv22.10"
+heteronyms_path: "tts_dataset_files/heteronyms-052722"
+whitelist_path: "tts_dataset_files/lj_speech.tsv"
 
 model:
   learn_alignment: true
@@ -41,11 +41,11 @@ model:
   symbols_embedding_dim: 384
   pitch_embedding_kernel_size: 3
 
-  pitch_fmin: ${pitch_fmin}
-  pitch_fmax: ${pitch_fmax}
+  pitch_fmin: 30
+  pitch_fmax: 512
 
-  pitch_mean: ${pitch_mean}
-  pitch_std: ${pitch_std}
+  pitch_mean: 121.9
+  pitch_std: 23.1
 
   sample_rate: ${sample_rate}
   n_mel_channels: ${n_mel_channels}
@@ -74,6 +74,7 @@ model:
     chars: true
     apostrophe: true
     pad_with_space: true
+    add_blank_at: true
     g2p:
       _target_: nemo_text_processing.g2p.modules.EnglishG2p
       phoneme_dict: ${phoneme_dict_path}
@@ -108,7 +109,7 @@ model:
     dataloader_params:
       drop_last: false
       shuffle: true
-      batch_size: 32
+      batch_size: 24
       num_workers: 12
       pin_memory: true
 
@@ -140,7 +141,7 @@ model:
     dataloader_params:
       drop_last: false
       shuffle: false
-      batch_size: 32
+      batch_size: 24
       num_workers: 8
       pin_memory: true
 
@@ -213,16 +214,10 @@ model:
     n_layers: 2
 
   optim:
-    name: adamw
-    lr: 1e-3
+    name: adam
+    lr: 2e-4
     betas: [0.9, 0.999]
     weight_decay: 1e-6
-
-    sched:
-      name: NoamAnnealing
-      warmup_steps: 1000
-      last_epoch: -1
-      d_model: 1  # Disable scaling based on model dim
 
 trainer:
   num_nodes: 1
@@ -230,13 +225,13 @@ trainer:
   accelerator: gpu
   strategy: ddp
   precision: 16
-  max_epochs: 1000
+  max_steps: 1000
   accumulate_grad_batches: 1
   gradient_clip_val: 1000.0
   enable_checkpointing: False # Provided by exp_manager
   logger: false # Provided by exp_manager
-  log_every_n_steps: 100
-  check_val_every_n_epoch: 5
+  log_every_n_steps: 10
+  check_val_every_n_epoch: 25
   benchmark: false
 
 exp_manager:
