@@ -26,9 +26,9 @@ val_max_duration: null
 val_min_duration: 3
 
 defaults:
-  - model/generator: v1
-  - model/train_ds: train_ds
-  - model/validation_ds: val_ds
+  - model/generator: v1.yaml
+  - model/train_ds: train_ds_finetune.yaml
+  - model/validation_ds: val_ds_finetune.yaml
 
 model:
   preprocessor:
@@ -56,15 +56,19 @@ model:
 
   optim:
     _target_: torch.optim.AdamW
-    lr: 0.0002
+    lr: 0.0001
     betas: [0.8, 0.99]
 
     sched:
       name: CosineAnnealing
       min_lr: 1e-5
       warmup_ratio: 0.02
+  
+  train_ds:
+    dataloader_params:
+      batch_size: 32
 
-  max_steps: 2500000
+  max_steps: 1000
   l1_loss_factor: 45
   denoise_strength: 0.0025
 
