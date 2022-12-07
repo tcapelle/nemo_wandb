@@ -7,6 +7,8 @@ name: FastPitch
 
 train_dataset: ???
 validation_datasets: ???
+wandb_artifact: null
+init_from_nemo_model: "./tts_en_fastpitch_align.nemo"
 sup_data_path: "./fastpitch_sup_data"
 sup_data_types: [ "align_prior_matrix", "pitch" ]
 
@@ -236,7 +238,9 @@ trainer:
   benchmark: false
 
 exp_manager:
-  exp_dir: null
+  create_wandb_logger: false
+  wandb_logger_kwargs: null
+  exp_dir: "./exp_dir"
   name: ${name}
   create_tensorboard_logger: false
   create_checkpoint_callback: true
