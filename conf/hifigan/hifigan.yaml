@@ -6,6 +6,7 @@ name: "HifiGan"
 
 train_dataset: ???
 validation_datasets: ???
+init_from_pretrained_model: null
 
 # Default values for dataset with sample_rate=22050
 sample_rate: 22050
@@ -27,8 +28,8 @@ val_min_duration: 3
 
 defaults:
   - model/generator: v1
-  - model/train_ds: train_ds
-  - model/validation_ds: val_ds
+  - model/train_ds: train_ds_finetune
+  - model/validation_ds: val_ds_finetune
 
 model:
   preprocessor:
@@ -59,10 +60,7 @@ model:
     lr: 0.0002
     betas: [0.8, 0.99]
 
-    sched:
-      name: CosineAnnealing
-      min_lr: 1e-5
-      warmup_ratio: 0.02
+    sched: null
 
   max_steps: 2500000
   l1_loss_factor: 45
@@ -72,24 +70,23 @@ trainer:
   num_nodes: 1
   devices: 1
   accelerator: gpu
-  strategy: ddp
+  strategy: null
   precision: 32
   max_steps: ${model.max_steps}
   accumulate_grad_batches: 1
   enable_checkpointing: False  # Provided by exp_manager
   logger: false # Provided by exp_manager
-  log_every_n_steps: 100
+  log_every_n_steps: 10
   check_val_every_n_epoch: 10
   benchmark: false
 
 exp_manager:
-  exp_dir: null
+  exp_dir: "./exp_dir"
   name: ${name}
-  create_tensorboard_logger: true
+  create_tensorboard_logger: false
   create_checkpoint_callback: true
   checkpoint_callback_params:
     monitor: val_loss
-    mode: min
   create_wandb_logger: false
   wandb_logger_kwargs:
     name: null

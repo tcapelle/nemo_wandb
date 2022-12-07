@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import wandb
+
 import pytorch_lightning as pl
 
 from nemo.collections.common.callbacks import LogEpochTimeCallback
@@ -29,6 +31,12 @@ def main(cfg):
         logging.warning("The recommended learning rate for finetuning is 2e-4")
     trainer = pl.Trainer(**cfg.trainer)
     exp_manager(trainer, cfg.get("exp_manager", None))
+    
+    # only if using wandb
+    if cfg.get("wandb_artifact", False):
+        logging.info(f"Creating lineage with {cfg.wandb_artifact}")
+        wandb.use_artifact(cfg.wandb_artifact)
+    
     model = FastPitchModel(cfg=cfg.model, trainer=trainer)
     model.maybe_init_from_pretrained_checkpoint(cfg=cfg)
     lr_logger = pl.callbacks.LearningRateMonitor()

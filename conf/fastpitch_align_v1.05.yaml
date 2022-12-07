@@ -218,7 +218,7 @@ model:
 
   optim:
     name: adam
-    lr: 2e-4
+    lr: 5e-5
     betas: [0.9, 0.999]
     weight_decay: 1e-6
 
@@ -238,13 +238,14 @@ trainer:
   benchmark: false
 
 exp_manager:
-  create_wandb_logger: false
+  create_wandb_logger: true
   wandb_logger_kwargs: null
   exp_dir: "./exp_dir"
   name: ${name}
   create_tensorboard_logger: false
   create_checkpoint_callback: true
   checkpoint_callback_params:
+    filename: "FastPitch"
     monitor: val_loss
   resume_if_exists: false
   resume_ignore_no_checkpoint: false
