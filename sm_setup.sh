@@ -5,7 +5,7 @@ apt-get install wget sox libsndfile1 ffmpeg -y
 
 pip install wandb text-unidecode pynini==2.1.5
 
-
 # install NeMo
+BRANCH="main"
 pip install Cython
-pip install nemo_toolkit[all]
+pip install git+https://github.com/NVIDIA/NeMo.git@$BRANCH\#egg=nemo_toolkit[all]
