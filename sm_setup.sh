@@ -3,7 +3,7 @@
 apt-get update
 apt-get install wget sox libsndfile1 ffmpeg -y
 
-pip install text-unidecode pynini==2.1.5
+pip install wandb text-unidecode pynini==2.1.5
 
 
 # install NeMo
