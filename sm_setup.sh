@@ -3,11 +3,9 @@
 apt-get update
 apt-get install wget sox libsndfile1 ffmpeg -y
 
-pip install text-unidecode pynini==2.1.4
+pip install text-unidecode pynini==2.1.5
+
 
 # install NeMo
-pip install git+https://github.com/NVIDIA/NeMo.git@$master
-
-# install pynini from Nvidia's repo
-wget https://raw.githubusercontent.com/NVIDIA/NeMo/main/nemo_text_processing/install_pynini.sh
-bash install_pynini.sh
+pip install Cython
+pip install nemo_toolkit[all]
