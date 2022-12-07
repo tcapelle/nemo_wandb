@@ -1,3 +1,4 @@
+
 # This config contains the default values for training FastPitch model with aligner on LJSpeech dataset.
 # If you want to train model on other dataset, you can change config values according to your dataset.
 # Most dataset-specific arguments are in the head of the config file, see below.
@@ -223,7 +224,7 @@ trainer:
   num_nodes: 1
   devices: 1
   accelerator: gpu
-  strategy: ddp
+  strategy: null
   precision: 16
   max_steps: 1000
   accumulate_grad_batches: 1
@@ -231,13 +232,13 @@ trainer:
   enable_checkpointing: False # Provided by exp_manager
   logger: false # Provided by exp_manager
   log_every_n_steps: 10
-  check_val_every_n_epoch: 25
+  check_val_every_n_epoch: 10
   benchmark: false
 
 exp_manager:
   exp_dir: null
   name: ${name}
-  create_tensorboard_logger: true
+  create_tensorboard_logger: false
   create_checkpoint_callback: true
   checkpoint_callback_params:
     monitor: val_loss
